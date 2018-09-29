@@ -7,7 +7,7 @@ from models.enc_dec.Beam import Beam
 
 class LSTMTagger_focus(nn.Module):
     
-    def __init__(self, embedding_dim, hidden_dim, vocab_size, tagset_size, pad_token_idx, pad_tag_idx, bidirectional=True, num_layers=1, dropout=0., device=None):
+    def __init__(self, embedding_dim, hidden_dim, vocab_size, tagset_size, intent_size, pad_token_idx, pad_tag_idx, bidirectional=True, num_layers=1, dropout=0., device=None):
         """Initialize model."""
         super(LSTMTagger_focus, self).__init__()
         self.embedding_dim = embedding_dim
@@ -37,6 +37,8 @@ class LSTMTagger_focus(nn.Module):
         
         # The linear layer that maps from hidden state space to tag space  # self.num_directions * self.hidden_dim
         self.hidden2tag = nn.Linear(1 * self.hidden_dim, self.tagset_size)
+        self.hidden2intent = nn.Linear(self.hidden_dim * 2, intent_size)
+        self.sigmoid = nn.Sigmoid()
 
         #self.init_weights()
 
@@ -78,6 +80,11 @@ class LSTMTagger_focus(nn.Module):
         else:
             h_t = enc_h_t
             c_t = enc_c_t
+
+        enc_final = torch.cat((h_t, c_t), 2)
+        intent_space = self.hidden2intent(enc_final.view(enc_final.shape[1], -1))
+        intent_socre = self.sigmoid(intent_space)
+
         tag_embeds = self.dropout_layer(self.tag_embeddings(tag_seqs))
         decode_inputs = torch.cat((self.dropout_layer(word_lstm_out), tag_embeds), 2)
         packed_decode_inputs = rnn_utils.pack_padded_sequence(decode_inputs, lengths, batch_first=True)
@@ -89,7 +96,7 @@ class LSTMTagger_focus(nn.Module):
         tag_scores = F.log_softmax(tag_space, dim=1)
         tag_scores = tag_scores.view(tag_lstm_out.size(0), tag_lstm_out.size(1), tag_space.size(1))
 
-        return tag_scores, (enc_h_t, enc_c_t)
+        return tag_scores, intent_socre, (enc_h_t, enc_c_t)
     
     def decode_greed(self, word_seqs, init_tags, lengths):
         minibatch_size = word_seqs.size(0) if self.encoder.batch_first else word_seqs.size(1)

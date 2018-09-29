@@ -12,7 +12,7 @@ american:B-airline_name flights:O from:O chicago:B-fromloc.city_name to:O los:B-
 what:O types:O of:O ground:O transportation:O are:O there:O to:O san:B-toloc.airport_name francisco:I-toloc.airport_name airport:I-toloc.airport_name <=> atis_ground_service
 in:O the:O next:B-depart_date.date_relative two:O days:O i:O want:O to:O fly:O from:O nashville:B-fromloc.city_name to:O san:B-toloc.city_name jose:I-toloc.city_name or:B-or to:O tacoma:B-toloc.city_name <=> atis_flight
 does:O continental:B-airline_name airlines:I-airline_name fly:O from:O denver:B-fromloc.city_name to:O san:B-toloc.city_name francisco:I-toloc.city_name <=> atis_flight
-chicago:B-fromloc.city_name to:O milwaukee:B-toloc.city_name <=> atis_flight
+chicago:B-fromloc.city_name to:O milwaukee:B-toloc.city_name 222.20.147.166
 how:O many:O flights:O does:O twa:B-airline_code have:O in:O business:B-class_type class:I-class_type <=> atis_quantity
 show:O me:O the:O flights:O from:O dallas:B-fromloc.city_name to:O baltimore:B-toloc.city_name in:O first:B-class_type class:I-class_type <=> atis_flight
 i'd:O like:O to:O find:O the:O least:B-cost_relative expensive:I-cost_relative one:B-round_trip way:I-round_trip fare:O from:O boston:B-fromloc.city_name to:O philadelphia:B-toloc.city_name <=> atis_airfare

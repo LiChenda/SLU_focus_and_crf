@@ -52,7 +52,7 @@ class LSTMTagger(nn.Module):
         c0 = torch.zeros(self.num_layers*self.num_directions, minibatch_size, self.hidden_dim, device=self.device)
         return (h0, c0)
         
-    def forward(self, sentences, lengths):
+    def forward(self, 0, lengths):
         h0_c0 = self.init_hidden(sentences)
         embeds = self.dropout_layer(self.word_embeddings(sentences))
         
